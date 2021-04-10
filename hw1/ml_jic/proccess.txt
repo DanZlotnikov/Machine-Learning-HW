@@ -1,0 +1,27 @@
+def preprocess(X, y):
+    """
+    Perform mean normalization on the features and true labels.
+
+    Input:
+    - X: Inputs (n features over m instances).
+    - y: True labels.
+
+    Returns a two vales:
+    - X: The mean normalized inputs.
+    - y: The mean normalized labels.
+    """
+    ###########################################################################
+    # TODO: Implement the normalization function.                             #
+    ###########################################################################
+    meanX = X.mean()
+    stdX = X.std()
+    meany = y.mean()
+    stdy = y.std()
+    temp = [(i - meanX) / stdX for i in X]
+    X = np.array(temp)
+    temp2 = [(i - meany) / stdy for i in y]
+    y = np.array(temp2)
+    ###########################################################################
+    #                             END OF YOUR CODE                            #
+    ###########################################################################
+    return X, y

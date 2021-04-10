@@ -1,0 +1,32 @@
+# PLOT
+np.random.seed(42)
+theta = np.random.random(size=X_train.shape[1])
+iterations = 10000
+alpha_0 = 0.01
+
+decay_factor_B = 0.5
+decay_factor_C = 0.3
+decay_factor_D = 0.1
+decay_factor_E = 0.01
+decay_factor_F = 0.001
+
+J_history_0 = adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, iterations, 0)
+J_history_B = adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, iterations, decay_factor_B)
+J_history_C = adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, iterations, decay_factor_C)
+J_history_D = adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, iterations, decay_factor_D)
+J_history_E = adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, iterations, decay_factor_E)
+J_history_F = adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, iterations, decay_factor_F)
+
+plt.plot(np.arange(iterations), J_history_0)
+plt.plot(np.arange(iterations), J_history_B)
+plt.plot(np.arange(iterations), J_history_C)
+plt.plot(np.arange(iterations), J_history_D)
+plt.plot(np.arange(iterations), J_history_E)
+plt.plot(np.arange(iterations), J_history_F)
+
+plt.xscale('log')
+plt.xlabel('Iterations')
+plt.ylabel('Validation Loss')
+plt.title('Validation Loss as a function of iterations')
+plt.legend(["learning rate: 0", "learning rate: {}".format(decay_factor_B), "learning rate: {}".format(decay_factor_C), "learning rate: {}".format(decay_factor_D), "learning rate: {}".format(decay_factor_E), "learning rate: {}".format(decay_factor_F)])
+plt.show()

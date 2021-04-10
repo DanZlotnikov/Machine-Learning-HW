@@ -1,0 +1,58 @@
+def backward_selection():
+    """
+    Train the model using the training set using all but one of the 
+    features at a time. Remove the worst feature according to the 
+    validation set. Next, remove an additional feature along with the 
+    feature you previously removed. Repeat this process until you 
+    reach 4 features and the bias. Don't forget the bias trick.
+
+    Returns:
+    - The names of the best features using backward selection.
+    """
+    np.random.seed(42)
+    best_features = []
+    ###########################################################################
+    # TODO: Implement the function.                                           #
+    ###########################################################################
+    X = all_features.values
+    y = df["price"].values
+    X, y = preprocess(X, y)
+    X_t = np.transpose(X)
+
+    while (len(all_features.columns) > 4):
+        features_T = np.transpose(all_features)
+        temp_theta = np.random.random(size=(len(all_features.columns) + 2))
+        J_worst_feature = np.inf
+        worst_feature_index = -1
+        for i, feature in enumerate(np.transpose(all_features.values)):
+            mat = np.column_stack((all_features.values, feature))
+
+            # training and validation split START
+            indices = np.random.permutation(mat.shape[0])
+            idx_train, idx_val = indices[:int(0.8*mat.shape[0])], indices[int(0.8*mat.shape[0]):]
+            mat_train, mat_val = mat[idx_train,:], mat[idx_val,:]
+            y_train, y_val = y[idx_train], y[idx_val]
+            # training and validation split END
+
+            # bias trick START
+            vec_train = np.ones(mat_train.shape[0])
+            vec_train = vec_train[:, None]
+            mat_train = (np.hstack((vec_train, mat_train)))
+
+            vec_val = np.ones(mat_val.shape[0])
+            vec_val = vec_val[:, None]
+            mat_val = (np.hstack((vec_val, mat_val)))
+            # bias trick END
+
+            mat_theta, _ = efficient_gradient_descent(mat_train, y_train, temp_theta, 0.1, 40000)
+            J_mat = compute_cost(mat_val, y_val, mat_theta)
+            if(J_mat < J_worst_feature):
+                J_worst_feature = J_mat
+                worst_feature_index = i
+        all_features.drop(columns=[all_features.columns[worst_feature_index]], inplace=True)
+    best_features = all_features.columns
+       
+    ###########################################################################
+    #                             END OF YOUR CODE                            #
+    ###########################################################################
+    return best_features.to_list()

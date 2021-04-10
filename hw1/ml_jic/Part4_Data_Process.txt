@@ -1,0 +1,23 @@
+# read and process the data START
+df = pd.read_csv('data.csv')
+X = df.drop(columns=['price', 'id', 'date']).values
+y = df['price'].values
+X, y = preprocess(X, y)
+# read and process the data END
+
+# training and validation split START
+np.random.seed(42)
+indices = np.random.permutation(X.shape[0])
+idx_train, idx_val = indices[:int(0.8*X.shape[0])], indices[int(0.8*X.shape[0]):]
+X_train, X_val = X[idx_train,:], X[idx_val,:]
+y_train, y_val = y[idx_train], y[idx_val]
+# training and validation split END
+
+# bias trick START
+vec_train = np.ones(X_train.shape[0])
+vec_train = vec_train[:, None]
+X_train = (np.hstack((vec_train, X_train)))
+vec_val = np.ones(X_val.shape[0])
+vec_val = vec_val[:, None]
+X_val = (np.hstack((vec_val, X_val)))
+# bias trick END

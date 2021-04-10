@@ -1,0 +1,25 @@
+def adaptive_gradient_descent(X_train, y_train, X_val, y_val, theta, alpha_0, num_iters, decay_factor):
+    
+    J_val_history = [] # python list to save VALIDATION cost in every iteration
+    J_train_history = [] # python list to save TRAINING cost in every iteration
+    theta = theta.copy() # avoid changing the original thetas
+    
+    k = 0
+    curr_train_cost = compute_cost(X_train, y_train, theta)
+    curr_val_cost = compute_cost(X_val, y_val, theta) # compute the cost over the validation set
+    while (k < num_iters):
+        # copute new adaptive alpha START
+        adaptive_alpha = alpha_0 / (1 + (decay_factor * k))
+        # copute new adaptive alpha END
+        k += 1
+        J_train_history.append(curr_train_cost)
+        J_val_history.append(curr_val_cost) # append to the new "cost list" the cost over the validation set
+        vec = X_train.dot(theta)
+        vec -= y_train
+        Xt_train_mult_vec = (np.transpose(X_train)).dot(vec)
+        Xt_train_mult_vec *= (adaptive_alpha / len(X_train))
+        theta -= Xt_train_mult_vec
+        curr_train_cost = compute_cost(X_train, y_train, theta)
+        curr_val_cost = compute_cost(X_val, y_val, theta) # compute the cost over the validation set
+
+    return J_val_history
